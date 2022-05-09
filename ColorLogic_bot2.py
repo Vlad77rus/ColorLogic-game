@@ -4,6 +4,7 @@ from aiogram.utils import executor
 import SLdb
 from config import STR1, TOKEN
 from keyboards import *
+import datetime, time
 
 
 
@@ -30,14 +31,14 @@ async def hueta(message):
                 ans = STR1
                 keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
                 keyboard.add(*[types.KeyboardButton(name) for name in ['/new_game','/champs','/help']])
-                bot.send_message(message.chat.id, ans, reply_markup=keyboard) 
+                await bot.send_message(message.chat.id, ans, reply_markup=keyboard) 
 
         elif message.text == '/new_game':
                 db.updbplayer(message.chat.id, message.chat.username, message.chat.first_name, message.chat.last_name, message.chat.title, message.from_user.language_code)
                 keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
                 keyboard.add(*[types.KeyboardButton(name) for name in ['level_1','level_2','level_3']])
                 keyboard.add(*[types.KeyboardButton(name) for name in ['level_4','level_5','level_6']])
-                bot.send_message(message.chat.id, f'''Выберите уровень, где 1 самый легкий, а 6 - сложный. Не переоценивайте свои силы, начните с легкого.
+                await bot.send_message(message.chat.id, f'''Выберите уровень, где 1 самый легкий, а 6 - сложный. Не переоценивайте свои силы, начните с легкого.
 
 1️⃣  - {k1+k2+k3+k4}
 
@@ -113,9 +114,8 @@ async def hueta(message):
                 if message.text == 'level_6':
                     lvl=6
                     col = k1+k2+k3+k4+k5+k6+k7+k8+k9
-                
 
-                db.new_game (message.chat.id,message.date,lvl)
+                db.new_game (message.chat.id, int(time.mktime(message.date.timetuple())),lvl)
                 keyboard = types.ReplyKeyboardRemove(selective=False)           # убиваем клаву Reply
                 await bot.send_message(message.chat.id, f'''Комбинация из цветов-
 {col}
@@ -147,7 +147,7 @@ async def hueta(message):
             
                     if ans == 'Victory !!!':
                         print('ПОБЕДА!')    
-                        ret = db.updbvictory(message.chat.id, message.date)
+                        ret = db.updbvictory(message.chat.id, int(time.mktime(message.date.timetuple())))
                         q= ret[0]
                         w= ret[1]
                 
@@ -233,7 +233,7 @@ async def callback_inline(call):
 ############            
             if ans == 'Victory !!!':
                 print('ПОБЕДА!')    
-                ret = db.updbvictory(call.message.chat.id, call.message.date)
+                ret = db.updbvictory(call.message.chat.id, int(time.mktime(call.message.date.timetuple())))
 
                 
 

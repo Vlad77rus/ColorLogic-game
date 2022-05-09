@@ -214,7 +214,7 @@ class DB:
         self.write_klava_variant(chatid, 0) 
         
         sql = f"INSERT INTO games (Gamer_ID, Start_Date_Time, Game_Level) VALUES ({ids}, {dats}, {les})"
-        print(sql)
+    
         mycursor.execute(sql)
         mydb.commit()
         Id = mycursor.lastrowid
